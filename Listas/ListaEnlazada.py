@@ -23,3 +23,15 @@ class ListaEnlazada:
             actual = actual.siguiente
             contador += 1
         return None
+    
+    def __iter__(self):
+        self.actual = self.cabeza
+        return self
+
+    def __next__(self):
+        if self.actual:
+            dato = self.actual.dato
+            self.actual = self.actual.siguiente
+            return dato
+        else:
+            raise StopIteration
