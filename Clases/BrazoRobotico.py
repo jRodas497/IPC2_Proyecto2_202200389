@@ -8,7 +8,6 @@ class BrazoRobotico:
         self.tiempo_ensamblaje = tiempo_ensamblaje
         self.productos = Productos(None)
         self.posicion_actual = 0  # Posición inicial del brazo
-        self.ensamblando = False
 
     def agregar_producto(self, nombre_producto):
         self.productos = Productos(nombre_producto)

@@ -1,9 +1,8 @@
 from tkinter import filedialog
 import xml.etree.ElementTree as ET
-import threading
 from Listas.ListaEnlazada import ListaEnlazada
 from Clases.BrazoRobotico import BrazoRobotico
-from Listas.Nodo import Nodo
+from Clases.Productos import Productos
 
 def abrir_archivo():
     print("Abriendo el cuadro de diálogo para seleccionar un archivo...")
@@ -42,26 +41,35 @@ def leerArchivoET():
 
         for producto in maquina.find('ListadoProductos').findall('Producto'):
             nombre_producto = producto.find('nombre').text.strip()
-            nuevo_producto = Nodo(nombre_producto)
+            nuevo_producto = Productos(nombre_producto)
             instrucciones = producto.find('elaboracion').text.strip().split()
-            for instruccion in instrucciones:
-                nuevo_producto.agregar_paso(instruccion)
+            for paso, instruccion in enumerate(instrucciones, start=1):
+                nuevo_producto.agregar_paso(paso, instruccion)  # Pasar el conjunto directamente
             brazo_robotico.agregar_producto(nuevo_producto)
 
-        lineas_ensamblaje.agregar(brazo_robotico)
+        lineas_ensamblaje.agregar(brazo_robotico)  # Agregar la máquina a la lista enlazada
 
     return lineas_ensamblaje
 
-lineas_ensamblaje = leerArchivoET()
-
-lock = threading.Lock()
-
-indice_maquina = 0
-maquina = lineas_ensamblaje.obtener(indice_maquina)
-while maquina:
-    # Aquí puedes realizar operaciones con cada máquina
-    print(f"Procesando máquina: {maquina.nombre_maquina}")
-    maquina.ensamblar_productos()
-    indice_maquina += 1
+def mostrar_listado(lineas_ensamblaje):
+    indice_maquina = 0
     maquina = lineas_ensamblaje.obtener(indice_maquina)
-    
+    primera_maquina = maquina  # Guardar la referencia a la primera máquina para detectar el ciclo
+    while maquina:
+        print(f"Nombre de maquina: {maquina.nombre_maquina}")
+        print(f"Cantidad de lineas: {maquina.cantidad_lineas}")
+        print(f"Cantidad de Componentes: {maquina.cantidad_componentes}")
+        print(f"Tiempo ensamblaje: {maquina.tiempo_ensamblaje}")
+        print("  Productos:")
+        '''for producto in maquina.productos:
+            print(f"    Nombre: {producto.nombre_producto}")
+            print("    Elaboración:")
+            pasos = " | ".join([f"L{paso.linea}C{paso.componente}" for paso in producto.elaboracion])
+            print(f"      Pasos: {pasos}")'''
+        indice_maquina += 1
+        maquina = lineas_ensamblaje.obtener(indice_maquina)
+        if maquina == primera_maquina:
+            break  # Salir del bucle si hemos vuelto al inicio
+
+lineas_ensamblaje = leerArchivoET()
+mostrar_listado(lineas_ensamblaje)

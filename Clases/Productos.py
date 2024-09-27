@@ -1,35 +1,21 @@
 from Clases.Elaboracion import Elaboracion
-from Listas.Nodo import Nodo
 
 class Productos:
     def __init__(self, nombre):
         self.nombre = nombre
-        self.pasos = None
+        self.elaboracion = None
 
-    def agregar_paso(self, paso):
-        nuevo_paso = Nodo(paso)
-        if self.pasos is None:
-            self.pasos = nuevo_paso
-            nuevo_paso.siguiente = nuevo_paso  # La lista es circular
-        else:
-            actual = self.pasos
-            while actual.siguiente != self.pasos:
-                actual = actual.siguiente
-            actual.siguiente = nuevo_paso
-            nuevo_paso.siguiente = self.pasos
+    def agregar_paso(self, paso, conjunto):
+        self.elaboracion = Elaboracion(paso, conjunto)
 
-    def ensamblar(self, brazo_robotico):
+    def ensamblar(self, lineas_ensamblaje, ensamblando):
         tiempo_total = 0
-        actual = self.pasos
-        if actual is None:
-            return tiempo_total
-        while True:
-            paso = actual.paso
-            # Aquí puedes descomponer el paso en línea y columna si es necesario
-            tiempo_movimiento = brazo_robotico.mover_a(paso)
-            tiempo_ensamblaje = brazo_robotico.ensamblar()
-            tiempo_total += tiempo_movimiento + tiempo_ensamblaje
-            actual = actual.siguiente
-            if actual == self.pasos:
-                break
+        if self.elaboracion:
+            linea_id, componente_id = self.elaboracion.linea, self.elaboracion.componente
+            linea = lineas_ensamblaje.obtener(linea_id)
+            componente = linea.obtener_componente(componente_id)
+            tiempo_movimiento = linea.brazo_robotico.mover_a(componente_id)
+            tiempo_total += tiempo_movimiento
+            tiempo_ensamblaje = linea.brazo_robotico.ensamblar(componente, ensamblando)
+            tiempo_total += tiempo_ensamblaje
         return tiempo_total
