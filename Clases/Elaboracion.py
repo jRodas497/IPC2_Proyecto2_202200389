@@ -1,10 +1,12 @@
 class Elaboracion:
-    def __init__(self, paso, conjunto):
-        self.paso = paso
+    def __init__(self, linea=None, componente=None, conjunto=None):
+        self.linea = linea
+        self.componente = componente
         self.conjunto = conjunto
-        self.linea, self.componente = self.separar_paso(conjunto)
+        if conjunto:
+            self.linea, self.componente = self.separar_paso(conjunto)
 
     @staticmethod
     def separar_paso(paso_str):
         linea, componente = paso_str[1:].split('C')
-        return int(linea) - 1, int(componente) - 1
+        return int(linea), int(componente)

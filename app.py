@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import threading
 from Listas.ListaEnlazada import ListaEnlazada
 from Clases.BrazoRobotico import BrazoRobotico
-from Clases.Productos import Productos
+from Listas.Nodo import Nodo
 
 def abrir_archivo():
     print("Abriendo el cuadro de diálogo para seleccionar un archivo...")
@@ -42,13 +42,13 @@ def leerArchivoET():
 
         for producto in maquina.find('ListadoProductos').findall('Producto'):
             nombre_producto = producto.find('nombre').text.strip()
-            nuevo_producto = Productos(nombre_producto)
+            nuevo_producto = Nodo(nombre_producto)
             instrucciones = producto.find('elaboracion').text.strip().split()
-            for paso, instruccion in enumerate(instrucciones, start=1):
-                nuevo_producto.agregar_paso(paso, instruccion)  # Pasar el conjunto directamente
+            for instruccion in instrucciones:
+                nuevo_producto.agregar_paso(instruccion)
             brazo_robotico.agregar_producto(nuevo_producto)
 
-        lineas_ensamblaje.agregar(brazo_robotico)  # Agregar la máquina a la lista enlazada
+        lineas_ensamblaje.agregar(brazo_robotico)
 
     return lineas_ensamblaje
 
@@ -61,5 +61,7 @@ maquina = lineas_ensamblaje.obtener(indice_maquina)
 while maquina:
     # Aquí puedes realizar operaciones con cada máquina
     print(f"Procesando máquina: {maquina.nombre_maquina}")
-    maquina = lineas_ensamblaje.obtener(indice_maquina)
+    maquina.ensamblar_productos()
     indice_maquina += 1
+    maquina = lineas_ensamblaje.obtener(indice_maquina)
+    
