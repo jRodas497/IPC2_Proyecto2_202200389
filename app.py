@@ -1,8 +1,27 @@
 from tkinter import filedialog
+from flask import Flask, render_template, request, redirect, url_for, Blueprint
 import xml.etree.ElementTree as ET
 from Listas.ListaEnlazada import ListaEnlazada
 from Clases.BrazoRobotico import BrazoRobotico
 from Clases.Productos import Productos
+
+app = Flask(__name__)
+blueprints = Blueprint("app", __name__, template_folder="templates")
+#---------------------- RUTAS ----------------------
+@blueprints.route('/')
+def listado():
+    return render_template('listado.html')
+
+@app.route('/listado')
+def listado():
+    return render_template('listado.html')
+
+app.register_blueprint(blueprints)
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+#---------------- FUNCIONES PYTHON ------------------
 
 def abrir_archivo():
     print("Abriendo el cuadro de diálogo para seleccionar un archivo...")
@@ -38,7 +57,7 @@ def leerArchivoET():
         tiempo_ensamblaje = int(maquina.find('TiempoEnsamblaje').text.strip())
 
         brazo_robotico = BrazoRobotico(nombre_maquina, cantidad_lineas, cantidad_componentes, tiempo_ensamblaje)
-
+        lista_productos = ListaEnlazada()
         for producto in maquina.find('ListadoProductos').findall('Producto'):
             nombre_producto = producto.find('nombre').text.strip()
             nuevo_producto = Productos(nombre_producto)
@@ -70,6 +89,9 @@ def mostrar_listado(lineas_ensamblaje):
         maquina = lineas_ensamblaje.obtener(indice_maquina)
         if maquina == primera_maquina:
             break  # Salir del bucle si hemos vuelto al inicio
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 lineas_ensamblaje = leerArchivoET()
 mostrar_listado(lineas_ensamblaje)
