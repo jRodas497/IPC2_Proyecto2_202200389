@@ -1,0 +1,65 @@
+/*
+	Color fondo: #632432;
+	Color header: 246355;
+	Color borde: 0F362D;
+	Color iluminado: 369681;
+*/
+body{
+	background-color: #eee;
+	font-family: Helvetica;
+}
+
+#main-container{
+	margin: 150px auto;
+	width: 600px;
+}
+
+table{
+	background-color: white;
+	text-align: left;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td{
+	padding: 20px;
+}
+
+thead{
+	background-color: #1b3039;
+	border-bottom: solid 5px #5a7f8f;
+	color: white;
+}
+
+tr:nth-child(even){
+	background-color: #ddd;
+}
+
+tr:hover td{
+	background-color: #5a7f8f;
+	color: white;
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.button:focus { outline: 0; }
+
+.buttonBlue {
+	background: #1b3039;
+	text-shadow: 1px 1px 0 rgba(39, 110, 204, .5);
+  }
+  
+.buttonBlue:hover { 
+	transform: scale(1.1);
+}

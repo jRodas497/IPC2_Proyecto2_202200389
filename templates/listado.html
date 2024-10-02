@@ -1,1 +1,72 @@
-<h1>Hola mundo!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Máquinas, Productos y Pasos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Listado de Máquinas, Productos y Pasos</h1>
+    {% for maquina in items %}
+        <h2>Máquina: {{ maquina.nombre_maquina }}</h2>
+        <p>Cantidad de líneas: {{ maquina.cantidad_lineas }}</p>
+        <p>Cantidad de componentes: {{ maquina.cantidad_componentes }}</p>
+        <p>Tiempo de ensamblaje: {{ maquina.tiempo_ensamblaje }}</p>
+        <h3>Productos:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Producto</th>
+                    <th>Pasos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in maquina.obtener_productos() %}
+                    <tr>
+                        <td>{{ producto.nombre_producto }}</td>
+                        <td>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Paso</th>
+                                        <th>Conjunto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for paso, conjunto in producto.obtener_pasos() %}
+                                        <tr>
+                                            <td>{{ paso }}</td>
+                                            <td>{{ conjunto }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+    <div>
+        {% if page > 1 %}
+            <a href="{{ url_for('mostrar_listado', page=page-1) }}">Previous</a>
+        {% endif %}
+        {% if page < total_pages %}
+            <a href="{{ url_for('mostrar_listado', page=page+1) }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>

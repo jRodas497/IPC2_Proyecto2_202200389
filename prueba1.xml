@@ -9,19 +9,19 @@
             <Producto>
                 <nombre> tv samsung </nombre>
                 <elaboracion>
-                    L2C5 L1C6   L2C12 L3C4      L3C10
+                    L2C5 L1C6 L2C12 L3C4 L3C10
                 </elaboracion>
             </Producto>
             <Producto>
                 <nombre>tv hisense</nombre>
                 <elaboracion>
-                    L1C4                 L3C8 L2C11 L1C2 L3C0
+                    L1C4 L3C8 L2C11 L1C2 L3C0
                 </elaboracion>
             </Producto>
             <Producto>
                 <nombre>televisión LG</nombre>
                 <elaboracion>
-                    L2C5 L1C7  L3C1    L2C9   L3C12
+                    L2C5 L1C7 L3C1 L2C9 L3C12
                 </elaboracion>
             </Producto>
         </ListadoProductos>
@@ -35,7 +35,7 @@
             <Producto>
                 <nombre> Nintendo Switch </nombre>
                 <elaboracion>
-                                            L1C3 L2C6 L4C0 L3C7 L2C2
+                    L1C3 L2C6 L4C0 L3C7 L2C2
                 </elaboracion>
             </Producto>
             <Producto>
@@ -47,13 +47,13 @@
             <Producto>
                 <nombre>televisión LG</nombre>
                 <elaboracion>
-                    L2C5 L1C7  L3C1    L2C9   L3C12
+                    L2C5 L1C7 L3C1 L2C9 L3C12
                 </elaboracion>
             </Producto>
             <Producto>
                 <nombre>Xbox</nombre>
                 <elaboracion>
-                    L4C3  L2C0 L1C6 L4C2 L3C1
+                    L4C3 L2C0 L1C6 L4C2 L3C1
                 </elaboracion>
             </Producto>
         </ListadoProductos>
