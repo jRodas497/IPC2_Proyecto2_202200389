@@ -189,6 +189,20 @@ def mostrar_listado():
 
     return render_template('listado.html', items=items, page=page, total_pages=total_pages)
 
+@app.route('/reporte/<nombre_producto>')
+def generar_reporte(nombre_producto):
+    filepath = 'C:/Users/Usuario/Desktop/Python/IPC2_Proyecto2_202200389/prueba1.xml'
+    lineas_ensamblaje = leerArchivoET(filepath)
+
+    # Buscar el producto en las líneas de ensamblaje
+    for i in range(lineas_ensamblaje.contar()):
+        maquina = lineas_ensamblaje.obtener(i)
+        for producto in maquina.obtener_productos():
+            if producto.nombre_producto == nombre_producto:
+                return render_template('reporte.html', producto=producto, maquina=maquina)
+
+    return "Producto no encontrado", 404
+
 '''filepath = abrir_archivo()
 lineas_ensamblaje = leerArchivoET(filepath)
 mostrar_listado(lineas_ensamblaje)

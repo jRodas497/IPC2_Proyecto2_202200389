@@ -72,4 +72,18 @@
             </Producto>
         </ListadoProductos>
     </Maquina>
+    <Maquina>
+        <NombreMaquina> Relojeria de Ejemplo </NombreMaquina>
+        <CantidadLineasProduccion> 2 </CantidadLineasProduccion>
+        <CantidadComponentes>5</CantidadComponentes>
+        <TiempoEnsamblaje>1</TiempoEnsamblaje>
+        <ListadoProductos>
+            <Producto>
+                <nombre>SmartWatch</nombre>
+                <elaboracion>
+                L1C2 L2C1 L2C2 L1C4
+                </elaboracion>
+            </Producto>
+        </ListadoProductos>
+    </Maquina>
 </ListaMaquinas>

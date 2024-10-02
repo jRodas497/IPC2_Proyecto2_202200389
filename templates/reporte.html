@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Simulación</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reporte de Simulación para {{ producto.nombre_producto }}</h1>
+    <h2>Máquina: {{ maquina.nombre_maquina }}</h2>
+    <p>Cantidad de líneas: {{ maquina.cantidad_lineas }}</p>
+    <p>Cantidad de componentes: {{ maquina.cantidad_componentes }}</p>
+    <p>Tiempo de ensamblaje: {{ maquina.tiempo_ensamblaje }}</p>
+    <h3>Pasos de Elaboración:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Paso</th>
+                <th>Conjunto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paso, conjunto in producto.obtener_pasos() %}
+                <tr>
+                    <td>{{ paso }}</td>
+                    <td>{{ conjunto }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
