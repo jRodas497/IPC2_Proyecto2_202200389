@@ -6,8 +6,8 @@ class NodoProducto:
         self.cabeza_pasos = None
         self.siguiente = None
 
-    def agregar_paso(self, paso, conjunto):
-        nuevo_paso = NodoElaboracion(paso, conjunto)
+    def agregar_paso(self, linea, componente):
+        nuevo_paso = NodoElaboracion(linea, componente)
         if not self.cabeza_pasos:
             self.cabeza_pasos = nuevo_paso
         else:
@@ -19,5 +19,5 @@ class NodoProducto:
     def obtener_pasos(self):
         actual = self.cabeza_pasos
         while actual:
-            yield actual.paso, actual.conjunto
+            yield actual.linea, actual.componente
             actual = actual.siguiente

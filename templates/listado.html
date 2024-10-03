@@ -27,10 +27,10 @@
     <table>
         <thead>
             <tr>
-                <th><a href="{{ url_for('mostrar_listado', page=page, sort_by='nombre_maquina', sort_order='asc' if sort_order == 'desc' else 'desc') }}">Nombre de la Máquina</a></th>
-                <th><a href="{{ url_for('mostrar_listado', page=page, sort_by='cantidad_lineas', sort_order='asc' if sort_order == 'desc' else 'desc') }}">Cantidad de Líneas</a></th>
-                <th><a href="{{ url_for('mostrar_listado', page=page, sort_by='cantidad_componentes', sort_order='asc' if sort_order == 'desc' else 'desc') }}">Cantidad de Componentes</a></th>
-                <th><a href="{{ url_for('mostrar_listado', page=page, sort_by='tiempo_ensamblaje', sort_order='asc' if sort_order == 'desc' else 'desc') }}">Tiempo de Ensamblaje</a></th>
+                <th>Nombre de la Máquina</th>
+                <th>Cantidad de Líneas</th>
+                <th>Cantidad de Componentes</th>
+                <th>Tiempo de Ensamblaje</th>
             </tr>
         </thead>
         <tbody>
@@ -47,7 +47,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre del Producto</th>
-                                    <th>Pasos</th>
+                                    <th>Elaboración</th>
                                     <th>Reporte</th>
                                 </tr>
                             </thead>
@@ -59,8 +59,8 @@
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <th>Paso</th>
-                                                        <th>Conjunto</th>
+                                                        <th>Linea</th>
+                                                        <th>Componente</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -73,7 +73,7 @@
                                                 </tbody>
                                             </table>
                                         </td>
-                                        <td><a href="{{ url_for('generar_reporte', nombre_producto=producto.nombre_producto) }}">Generar Reporte</a></td>
+                                        <td><a href="{{ url_for('generar_reporte', nombre_producto=producto.nombre_producto) }}">Generar Reporte HTML</a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -83,13 +83,5 @@
             {% endfor %}
         </tbody>
     </table>
-    <div>
-        {% if page > 1 %}
-            <a href="{{ url_for('mostrar_listado', page=page-1, sort_by=sort_by, sort_order=sort_order) }}">Previous</a>
-        {% endif %}
-        {% if page < total_pages %}
-            <a href="{{ url_for('mostrar_listado', page=page+1, sort_by=sort_by, sort_order=sort_order) }}">Next</a>
-        {% endif %}
-    </div>
 </body>
 </html>

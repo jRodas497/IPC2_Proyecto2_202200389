@@ -4,20 +4,20 @@ class BrazoRobotico:
         self.cantidad_lineas = cantidad_lineas
         self.cantidad_componentes = cantidad_componentes
         self.tiempo_ensamblaje = tiempo_ensamblaje
-        self.cabeza = None
+        self.cabeza_productos = None
         self.siguiente = None
-
-    def agregar_producto(self, nodo_producto):
-        if not self.cabeza:
-            self.cabeza = nodo_producto
+        
+    def agregar_producto(self, producto):
+        if not self.cabeza_productos:
+            self.cabeza_productos = producto
         else:
-            actual = self.cabeza
+            actual = self.cabeza_productos
             while actual.siguiente:
                 actual = actual.siguiente
-            actual.siguiente = nodo_producto
+            actual.siguiente = producto
             
     def obtener_productos(self):
-        actual = self.cabeza
+        actual = self.cabeza_productos
         while actual:
             yield actual
             actual = actual.siguiente
