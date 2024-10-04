@@ -1,0 +1,77 @@
+// Movimientos de Ensamblaje
+digraph {
+	L2C1 [label=L2C1]
+	L2C1 -> L2C2
+	L2C2 [label=L2C2]
+	L2C2 -> L2C3
+	L2C3 [label=L2C3]
+	L2C3 -> L2C4
+	L2C4 [label=L2C4]
+	L2C4 -> L2C5
+	L2C5 [label=L2C5]
+	L2C5 -> L2C5
+	L2C5 [label=L2C5]
+	L2C5 -> L2C5
+	L2C5 [label=L2C5]
+	L2C5 -> L1C1
+	L1C1 [label=L1C1]
+	L1C1 -> L1C2
+	L1C2 [label=L1C2]
+	L1C2 -> L1C3
+	L1C3 [label=L1C3]
+	L1C3 -> L1C4
+	L1C4 [label=L1C4]
+	L1C4 -> L1C5
+	L1C5 [label=L1C5]
+	L1C5 -> L1C6
+	L1C6 [label=L1C6]
+	L1C6 -> L1C6
+	L1C6 [label=L1C6]
+	L1C6 -> L1C6
+	L1C6 [label=L1C6]
+	L1C6 -> L2C6
+	L2C6 [label=L2C6]
+	L2C6 -> L2C7
+	L2C7 [label=L2C7]
+	L2C7 -> L2C8
+	L2C8 [label=L2C8]
+	L2C8 -> L2C9
+	L2C9 [label=L2C9]
+	L2C9 -> L2C10
+	L2C10 [label=L2C10]
+	L2C10 -> L2C11
+	L2C11 [label=L2C11]
+	L2C11 -> L2C12
+	L2C12 [label=L2C12]
+	L2C12 -> L2C12
+	L2C12 [label=L2C12]
+	L2C12 -> L2C12
+	L2C12 [label=L2C12]
+	L2C12 -> L3C1
+	L3C1 [label=L3C1]
+	L3C1 -> L3C2
+	L3C2 [label=L3C2]
+	L3C2 -> L3C3
+	L3C3 [label=L3C3]
+	L3C3 -> L3C4
+	L3C4 [label=L3C4]
+	L3C4 -> L3C4
+	L3C4 [label=L3C4]
+	L3C4 -> L3C4
+	L3C4 [label=L3C4]
+	L3C4 -> L3C5
+	L3C5 [label=L3C5]
+	L3C5 -> L3C6
+	L3C6 [label=L3C6]
+	L3C6 -> L3C7
+	L3C7 [label=L3C7]
+	L3C7 -> L3C8
+	L3C8 [label=L3C8]
+	L3C8 -> L3C9
+	L3C9 [label=L3C9]
+	L3C9 -> L3C10
+	L3C10 [label=L3C10]
+	L3C10 -> L3C10
+	L3C10 [label=L3C10]
+	L3C10 -> L3C10
+}

@@ -16,9 +16,17 @@
             padding: 8px;
             text-align: left;
         }
+        .top-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="top-right">
+        <a href="#">Enlace</a>
+    </div>
     <h1>Reporte de Simulación para {{ producto.nombre_producto }}</h1>
     <h2>Máquina: {{ maquina.nombre_maquina }}</h2>
     <p>Cantidad de líneas: {{ maquina.cantidad_lineas }}</p>

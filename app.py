@@ -1,8 +1,10 @@
+import base64
 from tkinter import filedialog
-from flask import Flask, render_template, request, redirect, url_for, render_template_string
-from werkzeug.utils import secure_filename
 import os, re
+from graphviz import Digraph
 import xml.etree.ElementTree as ET
+from flask import Flask, request, redirect, url_for, render_template, render_template_string, session
+from werkzeug.utils import secure_filename
 from Listas.ListaEnlazada import ListaEnlazada
 from Listas.NodoProducto import NodoProducto
 from Listas.ListaItems import ListaItems
@@ -11,7 +13,12 @@ from Clases.Movimiento import Movimiento
 from Clases.Posicion import Posicion
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.secret_key = 'supersecretkey'
 ITEMS_PER_PAGE = 10
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 #---------------- FUNCIONES PYTHON ------------------
 
@@ -34,6 +41,20 @@ def abrir_archivo():
             print(f"Error al leer el archivo: {e}")
             
         return ruta
+
+def abrir_archivo_2():
+    if 'file' not in request.files:
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        return redirect(request.url)
+    if file and file.filename.endswith('.xml'):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        session['filepath'] = filepath  # Almacenar la ruta en la sesión
+        return filepath
+    return None
     
 def leerArchivoET(filepath):
     tree = ET.parse(filepath)
@@ -224,7 +245,24 @@ def simular_ensamblaje(maquina, producto):
 
     return cabeza_movimientos, tiempo
 
-def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total):
+def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total, pasos_elaboracion):
+    '''print("PATH:", os.environ['PATH'])
+
+    # Crear el gráfico de Graphviz
+    dot = Digraph(comment='Movimientos de Ensamblaje')
+    actual = cabeza_movimientos
+    while actual and actual.siguiente:
+        dot.node(f"L{actual.linea}C{actual.componente}", f"L{actual.linea}C{actual.componente}")
+        dot.edge(f"L{actual.linea}C{actual.componente}", f"L{actual.siguiente.linea}C{actual.siguiente.componente}")
+        actual = actual.siguiente
+
+    # Renderizar el gráfico a una imagen
+    try:
+        dot.format = 'png'
+        dot.render('movimientos', view=False)
+    except Exception as e:
+        return f"Error al renderizar el gráfico: {e}"'''
+    
     html = f"""
     <html>
     <head>
@@ -241,15 +279,26 @@ def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total):
                 padding: 8px;
                 text-align: left;
             }}
+            .top-right {{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }}
         </style>
     </head>
     <body>
+        <div class="top-right">
+        <a href="#">Enlace</a>
+        </div>
         <h1>Reporte de Simulación para {producto.nombre_producto}</h1>
         <h2>Máquina: {maquina.nombre_maquina}</h2>
         <p>Cantidad de líneas: {maquina.cantidad_lineas}</p>
         <p>Cantidad de componentes: {maquina.cantidad_componentes}</p>
         <p>Tiempo de ensamblaje: {maquina.tiempo_ensamblaje}</p>
         <h3>Pasos de Elaboración:</h3>
+        <p>{pasos_elaboracion}</p>
+        <h3>Movimientos de Ensamblaje:</h3>
+        
         <table>
             <thead>
                 <tr>
@@ -282,11 +331,21 @@ def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total):
     return html
 
 #---------------- FUNCIONES FLASK ------------------
-ruta = abrir_archivo()
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        filepath = abrir_archivo_2()
+        if filepath:
+            # Procesar el archivo XML y redirigir a la vista de listado
+            return redirect(url_for('mostrar_listado', filepath=filepath))
+    return render_template('index.html')
 
-@app.route('/')
+@app.route('/listado')
 def mostrar_listado():
-    filepath = ruta
+    filepath = request.args.get('filepath')
+    if not filepath:
+        return redirect(url_for('index'))
+    
     lineas_ensamblaje = leerArchivoET(filepath)
     mostrar_listado_consola(lineas_ensamblaje)
 
@@ -303,7 +362,10 @@ def mostrar_listado():
 
 @app.route('/reporte/<nombre_producto>')
 def generar_reporte(nombre_producto):
-    filepath =  ruta
+    filepath = session.get('filepath')
+    if not filepath:
+        return redirect(url_for('index'))
+    
     lineas_ensamblaje = leerArchivoET(filepath)
 
     # Buscar el producto en las líneas de ensamblaje
@@ -315,7 +377,9 @@ def generar_reporte(nombre_producto):
                 cabeza_movimientos, tiempo_total = simular_ensamblaje(maquina, producto)
 
                 # Generar el reporte HTML
-                reporte_html = generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total)
+                pasos = [f"L{linea}C{componente}" for linea, componente in producto.obtener_pasos()]
+                pasos_elaboracion = " -> ".join(pasos)
+                reporte_html = generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total, pasos_elaboracion)
 
                 return render_template_string(reporte_html)
 
