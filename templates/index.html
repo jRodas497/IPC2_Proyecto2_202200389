@@ -10,16 +10,56 @@
             top: 10px;
             right: 10px;
         }
+        h1, h3 { font-weight: 300; 
+            margin-top: 25px;
+            margin-left: 25px;
+            }
+            
+            h1 { color: #636363; }
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        p {
+            font-size: 1.2rem;
+            text-align: center;
+          }
+        .button {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:focus { outline: 0; }
+        .buttonBlue {
+            background: #1b3039;
+            text-shadow: 1px 1px 0 rgba(39, 110, 204, .5);
+          }
+          
+          .buttonBlue:hover { background: #5a7f8f; }
+          
     </style>
 </head>
 <body>
     <div class="top-right">
-        <a href="#">Enlace</a>
+        <p><a href="https://github.com/jRodas497">Github del Estudiante</a></p>
     </div>
     <h1>Seleccionar Archivo XML</h1>
     <form method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept=".xml">
-        <button type="submit">Cargar Archivo</button>
+        
+        <div class="button-container">
+            <button type="submit" class="button buttonBlue">Cargar Archivo
+                <div type="submit" class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+            </button>
+        </div>
     </form>
+
+    
+
+
 </body>
 </html>

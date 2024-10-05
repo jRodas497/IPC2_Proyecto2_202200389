@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Máquinas, Productos y Pasos</title>
     <style>
+        h1, h3 { font-weight: 300; 
+            margin-top: 25px;
+            margin-left: 25px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -25,11 +29,35 @@
             top: 10px;
             right: 10px;
         }
+        p {
+            font-size: 1.2rem;
+            text-align: center;
+          }
+          table{
+            background-color: white;
+            text-align: left;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        th, td{
+            padding: 20px;
+        }
+        
+        thead{
+            background-color: #1b3039;
+            border-bottom: solid 5px #5a7f8f;
+            color: white;
+        }
+        
+        tr:nth-child(even){
+            background-color: #ddd;
+        }   
     </style>
 </head>
 <body>
     <div class="top-right">
-        <a href="#">Enlace</a>
+        <p><a href="https://github.com/jRodas497">Github del Estudiante</a></p>
     </div>
     <h1>Listado de Máquinas, Productos y Pasos</h1>
     <table>

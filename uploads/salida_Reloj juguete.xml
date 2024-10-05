@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<SalidaSimulacion>
+  <Maquina>
+    <Nombre>Relojeria</Nombre>
+    <ListadoProductos>
+      <Producto>
+        <Nombre>Reloj juguete</Nombre>
+        <TiempoTotal>13</TiempoTotal>
+        <ElaboracionOptima>
+          <Tiempo NoSegundo="1">
+            <LineaEnsamblaje NoLinea="1" NoComponente="1">L1C1</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="2">
+            <LineaEnsamblaje NoLinea="1" NoComponente="2">L1C2</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="3">
+            <LineaEnsamblaje NoLinea="1" NoComponente="2">L1C2</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="4">
+            <LineaEnsamblaje NoLinea="4" NoComponente="1">L4C1</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="5">
+            <LineaEnsamblaje NoLinea="4" NoComponente="1">L4C1</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="6">
+            <LineaEnsamblaje NoLinea="3" NoComponente="1">L3C1</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="7">
+            <LineaEnsamblaje NoLinea="3" NoComponente="2">L3C2</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="8">
+            <LineaEnsamblaje NoLinea="3" NoComponente="3">L3C3</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="9">
+            <LineaEnsamblaje NoLinea="3" NoComponente="3">L3C3</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="10">
+            <LineaEnsamblaje NoLinea="5" NoComponente="0">L5C0</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="11">
+            <LineaEnsamblaje NoLinea="2" NoComponente="1">L2C1</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="12">
+            <LineaEnsamblaje NoLinea="2" NoComponente="2">L2C2</LineaEnsamblaje>
+          </Tiempo>
+          <Tiempo NoSegundo="13">
+            <LineaEnsamblaje NoLinea="2" NoComponente="2">L2C2</LineaEnsamblaje>
+          </Tiempo>
+        </ElaboracionOptima>
+      </Producto>
+    </ListadoProductos>
+  </Maquina>
+</SalidaSimulacion>

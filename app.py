@@ -1,9 +1,9 @@
-import base64
 from tkinter import filedialog
 import os, re
+from xml.dom import minidom
 from graphviz import Digraph
 import xml.etree.ElementTree as ET
-from flask import Flask, request, redirect, url_for, render_template, render_template_string, session
+from flask import Flask, request, redirect, url_for, render_template, session
 from werkzeug.utils import secure_filename
 from Listas.ListaEnlazada import ListaEnlazada
 from Listas.NodoProducto import NodoProducto
@@ -15,7 +15,6 @@ from Clases.Posicion import Posicion
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.secret_key = 'supersecretkey'
-ITEMS_PER_PAGE = 10
 
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
@@ -52,7 +51,7 @@ def abrir_archivo_2():
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        session['filepath'] = filepath  # Almacenar la ruta en la sesión
+        session['filepath'] = filepath
         return filepath
     return None
     
@@ -75,16 +74,15 @@ def leerArchivoET(filepath):
             nodo_producto = NodoProducto(nombre_producto)
             instrucciones = producto.find('elaboracion').text.strip()
             
-            # Utilizar re.findall para extraer las instrucciones
             matches = re.findall(r'L(\d+)C(\d+)', instrucciones)
             for match in matches:
-                linea = int(match[0])  # Extraer el número de línea
-                componente = int(match[1])  # Extraer el número de componente
+                linea = int(match[0])
+                componente = int(match[1])
                 nodo_producto.agregar_paso(linea, componente)
             
             brazo_robotico.agregar_producto(nodo_producto)
 
-        lineas_ensamblaje.agregar(brazo_robotico)  # Agregar la máquina a la lista enlazada
+        lineas_ensamblaje.agregar(brazo_robotico)
 
     return lineas_ensamblaje
 
@@ -156,14 +154,12 @@ def mostrar_pasos(lineas_ensamblaje):
             break
                
 def mostrar_cantidad_datos(lineas_ensamblaje):
-    # Contar brazos robóticos
     cantidad_brazos = 0
     actual_brazo = lineas_ensamblaje.cabeza
     while actual_brazo:
         cantidad_brazos += 1
         actual_brazo = actual_brazo.siguiente
 
-    # Contar productos
     cantidad_productos = 0
     actual_brazo = lineas_ensamblaje.cabeza
     while actual_brazo:
@@ -174,7 +170,6 @@ def mostrar_cantidad_datos(lineas_ensamblaje):
 
         actual_brazo = actual_brazo.siguiente
 
-    # Contar pasos
     cantidad_pasos = 0
     actual_brazo = lineas_ensamblaje.cabeza
     while actual_brazo:
@@ -198,7 +193,6 @@ def simular_ensamblaje(maquina, producto):
     cabeza_movimientos = None
     cabeza_posiciones = None
 
-    # Inicializar las posiciones de las líneas de ensamblaje
     for i in range(maquina.cantidad_lineas):
         nueva_posicion = Posicion(i + 1, 0)
         if not cabeza_posiciones:
@@ -213,12 +207,10 @@ def simular_ensamblaje(maquina, producto):
         linea = int(linea)
         componente = int(componente)
 
-        # Encontrar la posición actual de la línea
         actual_posicion = cabeza_posiciones
         while actual_posicion and actual_posicion.linea != linea:
             actual_posicion = actual_posicion.siguiente
 
-        # Mover el brazo hasta la posición del componente
         while actual_posicion.componente < componente:
             tiempo += 1
             actual_posicion.componente += 1
@@ -231,7 +223,6 @@ def simular_ensamblaje(maquina, producto):
                     actual = actual.siguiente
                 actual.siguiente = nuevo_movimiento
 
-        # Ensamblar el componente
         for _ in range(maquina.tiempo_ensamblaje):
             tiempo += 1
             nuevo_movimiento = Movimiento(tiempo, linea, actual_posicion.componente, "Ensamblar componente")
@@ -244,9 +235,11 @@ def simular_ensamblaje(maquina, producto):
                 actual.siguiente = nuevo_movimiento
 
     return cabeza_movimientos, tiempo
-
-def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total, pasos_elaboracion):
-    '''print("PATH:", os.environ['PATH'])
+    
+def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total):
+    '''
+    
+    print("PATH:", os.environ['PATH'])
 
     # Crear el gráfico de Graphviz
     dot = Digraph(comment='Movimientos de Ensamblaje')
@@ -261,43 +254,52 @@ def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total, pa
         dot.format = 'png'
         dot.render('movimientos', view=False)
     except Exception as e:
-        return f"Error al renderizar el gráfico: {e}"'''
+        return f"Error al renderizar el gráfico: {e}"
+        
+    '''
     
     html = f"""
     <html>
     <head>
         <title>Reporte de Simulación para {producto.nombre_producto}</title>
         <style>
+        h1, h2, h3 {{ font-weight: 300; 
+            margin-top: 25px;
+            margin-left: 25px;
+        }}
             table {{
-                width: 100%;
-                border-collapse: collapse;
-            }}
-            table, th, td {{
-                border: 1px solid black;
-            }}
-            th, td {{
-                padding: 8px;
-                text-align: left;
-            }}
-            .top-right {{
-                position: absolute;
-                top: 10px;
-                right: 10px;
-            }}
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        table, th, td {{
+            border: 1px solid black;
+        }}
+        th, td {{
+            padding: 8px;
+            text-align: left;
+        }}
+        p {{
+            font-size: 1.2rem;
+            text-align: left;
+            margin-left: 45px;
+          }}
+        .top-right {{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }}
         </style>
     </head>
     <body>
         <div class="top-right">
-        <a href="#">Enlace</a>
+        <p><a href="https://github.com/jRodas497">Github del Estudiante</a></p>
         </div>
         <h1>Reporte de Simulación para {producto.nombre_producto}</h1>
-        <h2>Máquina: {maquina.nombre_maquina}</h2>
+        <h2><strong>Máquina: {maquina.nombre_maquina}</strong></h2>
         <p>Cantidad de líneas: {maquina.cantidad_lineas}</p>
         <p>Cantidad de componentes: {maquina.cantidad_componentes}</p>
         <p>Tiempo de ensamblaje: {maquina.tiempo_ensamblaje}</p>
-        <h3>Pasos de Elaboración:</h3>
-        <p>{pasos_elaboracion}</p>
-        <h3>Movimientos de Ensamblaje:</h3>
+        <h3><strong>Movimientos de Ensamblaje:</strong></h3>
         
         <table>
             <thead>
@@ -324,11 +326,49 @@ def generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total, pa
     html += f"""
             </tbody>
         </table>
-        <h3>Tiempo Total de Ensamblaje: {tiempo_total} segundos</h3>
+        <h3><strong>Tiempo Total de Ensamblaje: {tiempo_total} segundos</strong></h3>
     </body>
     </html>
     """
     return html
+
+def prettify(elem):
+    rough_string = ET.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
+
+def generar_xml(maquina, producto, cabeza_movimientos, tiempo_total):
+    root = ET.Element("SalidaSimulacion")
+    
+    maquina_elem = ET.SubElement(root, "Maquina")
+    
+    nombre_maquina_elem = ET.SubElement(maquina_elem, "Nombre")
+    nombre_maquina_elem.text = maquina.nombre_maquina
+    
+    listado_productos_elem = ET.SubElement(maquina_elem, "ListadoProductos")
+    
+    producto_elem = ET.SubElement(listado_productos_elem, "Producto")
+    
+    nombre_producto_elem = ET.SubElement(producto_elem, "Nombre")
+    nombre_producto_elem.text = producto.nombre_producto
+    
+    tiempo_total_elem = ET.SubElement(producto_elem, "TiempoTotal")
+    tiempo_total_elem.text = str(tiempo_total)
+    
+    elaboracion_optima_elem = ET.SubElement(producto_elem, "ElaboracionOptima")
+    
+    movimiento_actual = cabeza_movimientos
+    idx = 1
+    while movimiento_actual is not None:
+        tiempo_elem = ET.SubElement(elaboracion_optima_elem, "Tiempo", NoSegundo=str(idx))
+        linea_ensamblaje_elem = ET.SubElement(tiempo_elem, "LineaEnsamblaje", NoLinea=str(movimiento_actual.linea), NoComponente=str(movimiento_actual.componente))
+        linea_ensamblaje_elem.text = f"L{movimiento_actual.linea}C{movimiento_actual.componente}"
+        movimiento_actual = movimiento_actual.siguiente
+        idx += 1
+
+    pretty_xml_as_string = prettify(root)
+    
+    return pretty_xml_as_string
 
 #---------------- FUNCIONES FLASK ------------------
 @app.route('/', methods=['GET', 'POST'])
@@ -336,7 +376,6 @@ def index():
     if request.method == 'POST':
         filepath = abrir_archivo_2()
         if filepath:
-            # Procesar el archivo XML y redirigir a la vista de listado
             return redirect(url_for('mostrar_listado', filepath=filepath))
     return render_template('index.html')
 
@@ -349,7 +388,6 @@ def mostrar_listado():
     lineas_ensamblaje = leerArchivoET(filepath)
     mostrar_listado_consola(lineas_ensamblaje)
 
-    # Obtener todos los elementos
     items = ListaItems()
     for i in range(lineas_ensamblaje.contar()):
         item = lineas_ensamblaje.obtener(i)
@@ -368,22 +406,35 @@ def generar_reporte(nombre_producto):
     
     lineas_ensamblaje = leerArchivoET(filepath)
 
-    # Buscar el producto en las líneas de ensamblaje
     for i in range(lineas_ensamblaje.contar()):
         maquina = lineas_ensamblaje.obtener(i)
         for producto in maquina.obtener_productos():
             if producto.nombre_producto == nombre_producto:
-                # Simular el ensamblaje
                 cabeza_movimientos, tiempo_total = simular_ensamblaje(maquina, producto)
+                
+                pasos = ""
+                movimiento_actual = cabeza_movimientos
+                while movimiento_actual is not None:
+                    pasos += f"L{movimiento_actual.linea}C{movimiento_actual.componente} "
+                    movimiento_actual = movimiento_actual.siguiente
+                
+                pasos = pasos.strip()
+                
+                xml_content = generar_xml(maquina, producto, cabeza_movimientos, tiempo_total)
+                
+                # Ensure the uploads directory exists
+                uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+                os.makedirs(uploads_dir, exist_ok=True)
+                
+                # Write the XML content to a file in the uploads directory
+                file_path = os.path.join(uploads_dir, f"salida_{producto.nombre_producto}.xml")
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(xml_content)
+                
+                html = generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total)
+                return html
 
-                # Generar el reporte HTML
-                pasos = [f"L{linea}C{componente}" for linea, componente in producto.obtener_pasos()]
-                pasos_elaboracion = " -> ".join(pasos)
-                reporte_html = generar_reporte_html(maquina, producto, cabeza_movimientos, tiempo_total, pasos_elaboracion)
-
-                return render_template_string(reporte_html)
-
-    return "Producto no encontrado", 404
+    return redirect(url_for('index'))
 
 '''filepath = abrir_archivo()
 lineas_ensamblaje = leerArchivoET(filepath)
